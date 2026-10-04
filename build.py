@@ -492,8 +492,8 @@ court = page_hero("b-court", "Hear ye, hear ye", "The Royal Court",
         <p class="status" id="arms-status" aria-live="polite" style="color:#24082E"></p>
       </div>
       <div class="shield-wrap">
-        <svg id="shield" viewBox="0 0 240 280" role="img" aria-label="Your coat of arms preview"></svg>
-        <p class="motto-out" id="motto-out">Long live the Supreme Leader</p>
+        <svg id="shield" viewBox="0 0 300 384" role="img" aria-label="Your coat of arms preview"></svg>
+        <p class="motto-out sr-only" id="motto-out" aria-live="polite">Long live the Supreme Leader</p>
       </div>
     </div>
     <script type="application/json" id="icon-data">{json.dumps(ICONS)}</script>

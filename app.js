@@ -189,17 +189,69 @@
   if(icons && $('shield')){
     var state=[{i:'crown',c:'#FF2E93'},{i:'bottle',c:'#FFC21A'},{i:'mic',c:'#19D3C0'},{i:'dragon',c:'#5B1FE0'}];
     var light={'#FFC21A':1,'#19D3C0':1,'#FF7A1A':1};
-    var path='M20 20 H220 V140 C220 205 170 245 120 265 C70 245 20 205 20 140 Z';
-    var cells=[[20,20],[120,20],[20,140],[120,140]];
+    /* Heraldic shield: viewBox 0 0 300 380 */
+    var SHIELD='M52 64 H248 V176 C248 254 202 304 150 330 C98 304 52 254 52 176 Z';
+    var CENTERS=[[104,122],[196,122],[108,222],[192,222]];
+    function shade(hex,amt){var n=parseInt(hex.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;
+      var f=function(c){return Math.max(0,Math.min(255,Math.round(amt>0?c+(255-c)*amt:c*(1+amt))))};
+      return 'rgb('+f(r)+','+f(g)+','+f(b)+')'}
+    function esc(t){return t.replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
     var draw=function(){
-      var s='<defs><clipPath id="sh"><path d="'+path+'"/></clipPath></defs><g clip-path="url(#sh)">';
-      cells.forEach(function(xy,k){var st=state[k],ink=light[st.c]?'#24082E':'#FFF4E2';
-        s+='<rect x="'+xy[0]+'" y="'+xy[1]+'" width="100" height="'+(k<2?120:130)+'" fill="'+st.c+'"/>';
-        s+='<svg x="'+(xy[0]+22)+'" y="'+(xy[1]+(k<2?32:22))+'" width="56" height="56" viewBox="0 0 24 24" style="color:'+ink+'">'+icons[st.i]+'</svg>'});
-      s+='</g><path d="M120 20V265M20 140H220" stroke="#24082E" stroke-width="5"/><path d="'+path+'" fill="none" stroke="#24082E" stroke-width="8"/>';
-      s+='<path d="M95 10 L105 0 L120 8 L135 0 L145 10 Z" fill="#FFC21A" stroke="#24082E" stroke-width="3"/>';
-      $('shield').innerHTML=s;
-      $('motto-out').textContent=$('motto').value.trim()||'Long live the Supreme Leader'};
+      var motto=($('motto').value.trim()||'Long live the Supreme Leader');
+      var d='<defs>'+
+        '<clipPath id="ca-clip"><path d="'+SHIELD+'"/></clipPath>'+
+        '<pattern id="ca-damask" width="18" height="18" patternUnits="userSpaceOnUse"><path d="M9 3 L12 9 L9 15 L6 9 Z" fill="#fff" opacity=".13"/><circle cx="0" cy="0" r="1.6" fill="#fff" opacity=".13"/><circle cx="18" cy="18" r="1.6" fill="#fff" opacity=".13"/></pattern>'+
+        '<radialGradient id="ca-gloss" cx="32%" cy="22%" r="75%"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#24082E" stop-opacity=".35"/></radialGradient>'+
+        '<linearGradient id="ca-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE68A"/><stop offset=".5" stop-color="#FFC21A"/><stop offset="1" stop-color="#C98A00"/></linearGradient>'+
+        '<linearGradient id="ca-steel" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".5" stop-color="#E4DDEB"/><stop offset="1" stop-color="#B9AEC4"/></linearGradient>'+
+        '<filter id="ca-shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="2.5" dy="3" stdDeviation="0" flood-color="#24082E" flood-opacity=".45"/></filter>'+
+        '<path id="ca-ribbon-path" d="M66 355 Q150 380 234 355"/>';
+      state.forEach(function(st,k){d+='<linearGradient id="ca-f'+k+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+shade(st.c,.28)+'"/><stop offset="1" stop-color="'+shade(st.c,-.22)+'"/></linearGradient>'});
+      d+='</defs>';
+      /* crossed swords behind the shield */
+      function sword(rot){return '<g transform="rotate('+rot+' 150 200)"><path d="M146 18 L150 4 L154 18 L154 300 L146 300 Z" fill="url(#ca-steel)" stroke="#24082E" stroke-width="2.5" stroke-linejoin="round"/><path d="M150 22 V292" stroke="#B9AEC4" stroke-width="1"/>'+
+        '<rect x="128" y="300" width="44" height="9" rx="4" fill="url(#ca-gold)" stroke="#24082E" stroke-width="2.5"/><rect x="146" y="309" width="8" height="34" rx="3" fill="#33105F" stroke="#24082E" stroke-width="2.5"/><circle cx="150" cy="348" r="7" fill="url(#ca-gold)" stroke="#24082E" stroke-width="2.5"/></g>'}
+      d+=sword(-38)+sword(38);
+      /* shield body */
+      d+='<path d="'+SHIELD+'" fill="#24082E" transform="translate(5 6)" opacity=".35"/>';
+      d+='<g clip-path="url(#ca-clip)">';
+      [[52,64,98,112],[150,64,98,112],[52,176,98,160],[150,176,98,160]].forEach(function(r,k){
+        d+='<rect x="'+r[0]+'" y="'+r[1]+'" width="'+r[2]+'" height="'+r[3]+'" fill="url(#ca-f'+k+')"/>'});
+      d+='<rect x="40" y="50" width="220" height="300" fill="url(#ca-damask)"/>';
+      state.forEach(function(st,k){var ink=light[st.c]?'#24082E':'#FFF4E2',c=CENTERS[k];
+        d+='<g filter="url(#ca-shadow)"><g transform="translate('+(c[0]-33)+' '+(c[1]-33)+') scale(2.75)" style="color:'+ink+'" stroke="'+(ink==='#FFF4E2'?'#24082E':'none')+'" stroke-width=".55" stroke-linejoin="round">'+icons[st.i]+'</g></g>'});
+      d+='<path d="M150 50 V340 M40 176 H260" stroke="#24082E" stroke-width="5"/><path d="M150 50 V340 M40 176 H260" stroke="url(#ca-gold)" stroke-width="1.6"/>';
+      d+='<rect x="40" y="50" width="220" height="300" fill="url(#ca-gloss)"/>';
+      d+='</g>';
+      /* bordure: ink, gold band, inner ink line, rivets */
+      d+='<path d="'+SHIELD+'" fill="none" stroke="#24082E" stroke-width="16" stroke-linejoin="round"/>';
+      d+='<path d="'+SHIELD+'" fill="none" stroke="url(#ca-gold)" stroke-width="10" stroke-linejoin="round"/>';
+      d+='<path d="'+SHIELD+'" fill="none" stroke="#24082E" stroke-width="2" stroke-linejoin="round" transform="translate(150 190) scale(.955) translate(-150 -190)"/>';
+      d+='<g id="ca-rivets"></g>';
+      /* crown */
+      d+='<g transform="translate(150 40)" stroke="#24082E" stroke-width="3" stroke-linejoin="round">'+
+        '<path d="M-46 18 L-52 -20 L-28 0 L0 -32 L28 0 L52 -20 L46 18 Z" fill="url(#ca-gold)"/>'+
+        '<rect x="-48" y="16" width="96" height="16" rx="4" fill="url(#ca-gold)"/>'+
+        '<circle cx="-52" cy="-24" r="6" fill="#FF2E93"/><circle cx="0" cy="-37" r="7" fill="#FF2E93"/><circle cx="52" cy="-24" r="6" fill="#FF2E93"/>'+
+        '<circle cx="-26" cy="24" r="4" fill="#19D3C0" stroke-width="2"/><rect x="-6" y="19" width="12" height="10" rx="2" fill="#5B1FE0" stroke-width="2"/><circle cx="26" cy="24" r="4" fill="#19D3C0" stroke-width="2"/>'+
+        '<path d="M-36 6 L-30 12 M36 6 L30 12" stroke="#FFF4E2" stroke-width="2" opacity=".8"/></g>';
+      /* motto ribbon */
+      var fs=22;
+      d+='<g stroke="#24082E" stroke-width="3" stroke-linejoin="round">'+
+        '<path d="M34 336 L66 340 L60 358 L68 378 L28 370 L40 354 Z" fill="#FF7A1A"/>'+
+        '<path d="M266 336 L234 340 L240 358 L232 378 L272 370 L260 354 Z" fill="#FF7A1A"/>'+
+        '<path d="M58 334 Q150 360 242 334 L242 368 Q150 394 58 368 Z" fill="#FFF4E2"/>'+
+        '<path d="M58 334 L66 340 M242 334 L234 340" stroke-width="2"/></g>'+
+        '<text font-family="UnifrakturMaguntia, Georgia, serif" font-size="'+fs+'" fill="#33105F" text-anchor="middle"><textPath href="#ca-ribbon-path" startOffset="50%">'+esc(motto)+'</textPath></text>';
+      $('shield').innerHTML=d;
+      /* rivets spaced evenly along the bordure */
+      var p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',SHIELD);$('shield').appendChild(p);
+      var L=p.getTotalLength(),rv='';for(var i=0;i<26;i++){var pt=p.getPointAtLength(L*i/26);rv+='<circle cx="'+pt.x.toFixed(1)+'" cy="'+pt.y.toFixed(1)+'" r="2.3" fill="#FFF4E2" stroke="#24082E" stroke-width="1.2"/>'}
+      p.remove();$('shield').querySelector('#ca-rivets').innerHTML=rv;
+      /* shrink the motto until it fits on the ribbon */
+      var tx=$('shield').querySelector('text'),room=$('shield').querySelector('#ca-ribbon-path').getTotalLength()*.94,size=22;
+      try{while(size>9&&tx.getComputedTextLength()>room){size-=1;tx.setAttribute('font-size',size)}}catch(e){}
+      $('motto-out').textContent=motto};
     each('.icon-btn',function(b){b.addEventListener('click',function(){var k=+b.dataset.q;state[k].i=b.dataset.icon;press('.icon-btn[data-q="'+k+'"]',b);draw()})});
     each('.swatch',function(b){b.addEventListener('click',function(){var k=+b.dataset.q;state[k].c=b.dataset.color;press('.swatch[data-q="'+k+'"]',b);draw()})});
     $('motto').addEventListener('input',draw);
@@ -214,11 +266,10 @@
     var blazon=function(){return 'My Royal Court coat of arms: '+state.map(function(st,k){return QN[k]+', a '+st.i+' on '+NAMES[st.c]}).join('; ')+'. Motto: "'+$('motto-out').textContent+'"'};
     $('arms-copy').addEventListener('click',function(){copy(blazon(),function(){$('arms-status').textContent='Blazon copied. Present it to the court.'},function(){$('arms-status').textContent='Copy was blocked here. '+blazon()})});
     if($('arms-dl'))$('arms-dl').addEventListener('click',function(){
-      var svg=$('shield').cloneNode(true);svg.setAttribute('xmlns','http://www.w3.org/2000/svg');svg.setAttribute('width','720');svg.setAttribute('height','840');
+      var svg=$('shield').cloneNode(true);svg.setAttribute('xmlns','http://www.w3.org/2000/svg');svg.setAttribute('width','780');svg.setAttribute('height','988');
       var url=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml'}));
-      var img=new Image();img.onload=function(){var c=document.createElement('canvas');c.width=800;c.height=1000;var x=c.getContext('2d');
-        x.fillStyle='#FFF4E2';x.fillRect(0,0,800,1000);x.drawImage(img,40,30,720,840);
-        x.fillStyle='#33105F';x.font='44px "UnifrakturMaguntia", Georgia, serif';x.textAlign='center';x.fillText($('motto-out').textContent,400,940,740);
+      var img=new Image();img.onload=function(){var c=document.createElement('canvas');c.width=860;c.height=1060;var x=c.getContext('2d');
+        x.fillStyle='#FFF4E2';x.fillRect(0,0,860,1060);x.drawImage(img,40,36,780,988);
         URL.revokeObjectURL(url);c.toBlob(function(b){var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='my-coat-of-arms.png';document.body.appendChild(a);a.click();a.remove();
           $('arms-status').textContent='Saved my-coat-of-arms.png.'})};
       img.onerror=function(){$('arms-status').textContent='Download failed in this browser. Try a screenshot instead.'};img.src=url});
