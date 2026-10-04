@@ -8,7 +8,9 @@ site data. Run by .github/workflows/update.yml once a day; safe to run by hand:
 Exit codes: 0 = ran fine (check the printed summary), 1 = YouTube's page format
 changed or a request failed, so nothing was written.
 """
-import json, os, re, sys, time, urllib.request
+import json, os, re, sys, urllib.request
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 from data import EPISODE_VIDEO_IDS, COURT_VIDEO_IDS, EPISODES, COURT
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -39,22 +41,44 @@ def initial_data(html):
     return json.loads(m.group(1))
 
 
+DURATION = re.compile(r'"(?:text|simpleText)":"((?:\d+:)?\d{1,2}:\d{2})"')
+AGO = re.compile(r'"(?:content|simpleText)":"(?:Streamed |Premiered )?(\d+)\s*(second|sec|s|minute|min|m|hour|hr|h|day|d|week|wk|w|month|mo|year|yr|y)s?\s+ago"', re.I)
+UNIT_DAYS = {"second": 0, "sec": 0, "s": 0, "minute": 0, "min": 0, "m": 0, "hour": 0, "hr": 0, "h": 0,
+             "day": 1, "d": 1, "week": 7, "wk": 7, "w": 7, "month": 30, "mo": 30, "year": 365, "yr": 365, "y": 365}
+
+
+def to_seconds(text):
+    secs = 0
+    for part in text.split(":"):
+        secs = secs * 60 + int(part)
+    return secs
+
+
+def to_date(blob):
+    """Posting date from YouTube's relative label ("4d ago", "3 hours ago"). Exact to the day for daily runs."""
+    m = AGO.search(blob)
+    days = int(m.group(1)) * UNIT_DAYS[m.group(2).lower()] if m else 0
+    today = datetime.now(ZoneInfo("America/Chicago")).date()
+    return (today - timedelta(days=days)).isoformat()
+
+
 def channel_videos(html):
-    """Return [(video_id, title)] newest first from a channel's /videos page."""
+    """Return [(video_id, title, seconds, date)] newest first from a channel's /videos page."""
     found, seen = [], set()
+    def add(vid, title, blob):
+        if vid and title and vid not in seen:
+            seen.add(vid)
+            d = DURATION.search(blob)
+            found.append((vid, title, to_seconds(d.group(1)) if d else 0, to_date(blob)))
     def walk(o):
         if isinstance(o, dict):
             if "lockupViewModel" in o and o["lockupViewModel"].get("contentId"):
                 l = o["lockupViewModel"]
                 title = (((l.get("metadata") or {}).get("lockupMetadataViewModel") or {}).get("title") or {}).get("content")
-                if title and l["contentId"] not in seen:
-                    seen.add(l["contentId"]); found.append((l["contentId"], title))
-                return
+                add(l["contentId"], title, json.dumps(l, ensure_ascii=False, separators=(",", ":"))); return
             if "videoRenderer" in o:
                 v = o["videoRenderer"]; runs = (v.get("title") or {}).get("runs") or []
-                if v.get("videoId") and runs and v["videoId"] not in seen:
-                    seen.add(v["videoId"]); found.append((v["videoId"], runs[0]["text"]))
-                return
+                add(v.get("videoId"), runs[0]["text"] if runs else None, json.dumps(v, ensure_ascii=False, separators=(",", ":"))); return
             for val in o.values(): walk(val)
         elif isinstance(o, list):
             for val in o: walk(val)
@@ -62,20 +86,11 @@ def channel_videos(html):
     return found
 
 
-def video_details(html):
-    """Return (YYYY-MM-DD, length_seconds) from a watch page."""
-    date = re.search(r'"(?:publishDate|uploadDate)":"(\d{4}-\d{2}-\d{2})', html)
-    length = re.search(r'"lengthSeconds":"(\d+)"', html)
-    if not date:
-        raise RuntimeError("publish date not found on watch page")
-    return date.group(1), int(length.group(1)) if length else 0
-
-
 def main():
     auto = {"report": [], "court": [], "skipped": []}
     if os.path.exists(AUTO):
         auto.update(json.load(open(AUTO, encoding="utf-8")))
-    skipped = set(auto["skipped"])
+    skipped = set(auto["skipped"]) | {e["id"] for e in auto["report"] + auto["court"]}
     known = {"report": set(EPISODE_VIDEO_IDS) | skipped, "court": {v for v in COURT_VIDEO_IDS if v} | skipped}
     added = []
     changed_skips = False
@@ -83,20 +98,17 @@ def main():
         vids = channel_videos(get(f"https://www.youtube.com/channel/{channel}/videos"))
         if not vids:
             raise RuntimeError(f"no videos parsed for {show}; page format may have changed")
-        new = [(vid, title) for vid, title in vids if vid not in known[show]]
-        for vid, title in reversed(new):            # oldest first, so the archive stays in order
+        new = [v for v in vids if v[0] not in known[show]]
+        for vid, title, seconds, date in reversed(new):   # oldest first, so the archive stays in order
             if show == "court":
                 m = COURT_TITLE.match(title)
                 if not m:
                     print(f"skip court video (not an episode): {title}"); auto["skipped"].append(vid); changed_skips = True; continue
-            date, seconds = video_details(get(f"https://www.youtube.com/watch?v={vid}"))
-            time.sleep(1)
-            if show == "report":
+                auto["court"].append({"id": vid, "date": date, "guest": m.group("guest").strip()})
+            else:
                 if seconds and seconds < MIN_REPORT_SECONDS:
                     print(f"skip report video (only {seconds}s): {title}"); auto["skipped"].append(vid); changed_skips = True; continue
                 auto["report"].append({"id": vid, "date": date, "title": title})
-            else:
-                auto["court"].append({"id": vid, "date": date, "guest": m.group("guest").strip()})
             added.append(f"{show}: {date} {title}")
     if added or changed_skips:
         with open(AUTO, "w", encoding="utf-8") as f:
