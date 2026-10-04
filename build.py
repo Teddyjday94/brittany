@@ -187,7 +187,7 @@ home = f'''<section class="band b-violet hero" aria-labelledby="hero-title">
     <div class="stats">
       <div class="stat"><b>7.6M+</b><span>TikTok followers on the main account</span><em>TIME, JUL 2025</em></div>
       <div class="stat"><b>#4</b><span>Where the Report debuted on Spotify's US podcast chart</span><em>TODAY, OCT 2023</em></div>
-      <div class="stat"><b>{len(COURT)}</b><span>Royal Court guests knighted so far</span><em>THETVDB, OCT 2026</em></div>
+      <div class="stat"><b>{len(COURT)}</b><span>Royal Court guests knighted so far</span><em>YOUTUBE, {MONTHS[int(COURT[-1][1][5:7])-1].upper()} {COURT[-1][1][:4]}</em></div>
       <div class="stat"><b>TIME100</b><span>Named one of TIME's 100 Creators of 2025</span><em>TIME, JUL 2025</em></div>
     </div>
   </div>
@@ -446,7 +446,7 @@ fields = "\n".join(f'''        <fieldset><legend>{quarters[i]}</legend><div clas
 
 court = page_hero("b-court", "Hear ye, hear ye", "The Royal Court",
     "Her medieval talk show premiered on YouTube in July 2023. Celebrities feast, give gifts, draw a coat of arms, and earn a seat on her council. She calls herself a Game of Thrones adult, and the show proves it.",
-    [(str(len(COURT)),"guests knighted through Oct 2026"),(str(len(cs)),"seasons and counting"),("2025","Webby Awards nominee"),("24.5M","combined views by spring 2025")]) + f'''
+    [(str(len(COURT)),"guests knighted through " + MONTHS[int(COURT[-1][1][5:7])-1] + " " + COURT[-1][1][:4]),(str(len(cs)),"seasons and counting"),("2025","Webby Awards nominee"),("24.5M","combined views by spring 2025")]) + f'''
 <section class="band b-pink" aria-labelledby="acts-title">
   <div class="wrap">
     {sec_head("How a court works", "Every episode runs in three acts. She took inspiration from Hot Ones, and she wants the costumes to make guests look ridiculous enough to drop the celebrity act.", "acts-title")}
@@ -467,7 +467,7 @@ court = page_hero("b-court", "Hear ye, hear ye", "The Royal Court",
 
 <section class="band b-court" id="roll" aria-labelledby="roll-title">
   <div class="wrap">
-    {sec_head("The Council Roll", "Every guest from Orville Peck in July 2023 to Riz Ahmed in October 2026. Search a name or summon one at random.", "roll-title")}
+    {sec_head("The Council Roll", f"Every guest from Orville Peck in July 2023 to {COURT[-1][2]} on {fmt(COURT[-1][1])}. Updated daily from YouTube. Search a name or summon one at random.", "roll-title")}
     <div class="tools">
       <label class="eyebrow" for="g-search" style="color:#FFC21A">Search the council</label>
       <input class="search" id="g-search" type="search" placeholder="Try Harry, Trixie, or Matt" autocomplete="off">

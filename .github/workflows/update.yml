@@ -1,0 +1,44 @@
+name: Daily episode update
+
+# Checks the Broski Report and Royal Court YouTube channels every day.
+# New episodes are added to auto_episodes.json, the pages are rebuilt,
+# and the commit triggers a fresh Vercel deploy.
+on:
+  schedule:
+    - cron: "17 13 * * *"   # every day at 13:17 UTC (8:17 AM Central)
+  workflow_dispatch: {}      # "Run workflow" button for an update on demand
+
+permissions:
+  contents: write
+
+concurrency:
+  group: episode-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check YouTube for new episodes
+        id: feeds
+        run: python3 update_feeds.py
+
+      - name: Rebuild pages
+        if: steps.feeds.outputs.changed == 'true'
+        run: EMBED=1 python3 build.py
+
+      - name: Commit and push
+        if: steps.feeds.outputs.changed == 'true'
+        run: |
+          git config user.name "broski-bulletin-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add auto_episodes.json *.html
+          git commit -m "Auto-update: ${{ steps.feeds.outputs.summary }}"
+          git push

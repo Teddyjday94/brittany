@@ -190,3 +190,22 @@ EPISODE_VIDEO_IDS = ['gBt-MQxXfBw', 'Yo-AjPkOeBQ', 'ZBaEzyXXRWI', '15QDvKTyUEU',
 # One ID per entry in COURT, same order. None = episode no longer on YouTube.
 COURT_VIDEO_IDS = ['fV70vvbaktk', 's-8rWY9KZNY', None, 'adirfoaPacc', 'oF1NpILWGhg', '0dn3V-PjU5I', 'HYHS8vIPZgQ', '-iks8pJUv7E', 'digzsDLaNOI', 'FLEoDN6V2lo', 'x6bXsiDtYsY', '4u4KzBas7ZE', 'EG4ba0Igsf8', 'AVlTqJifTgk', 'PHTHdVK3JXM', '9cHHK_ypNZw', 'DfNcgzfg80s', 'cZEvDNVQgx0', 'rtM6IstvooA', 'oa-iLXCTwtQ', 'YT8e1mCeVMw', 'DQCvuD04zIQ', '0R6yqx0B-6E', '98WbNzYhYnU', 'EOOKRYXw5ks', 'o1txVUDzhD0', '6tNWYBV4xoM', 'ZeoNuYuSGVY', 'CaMN7lbHevs', '2E7WGltkY3o', '4_oLkEiO7ks', '9RvqhC-mcOw', 'HSkxQslmZ8Q', 'CzJh-35rS60', 'cTwMxhx8jP0', 'xcJBPqEaLYc', 'ypTsVPomfOc', 'nbY4zdliKuA', 'HVyvXZMtGis', 'gWUYhW1h7uU', 'sH0AILbpY0Y', 'RiplOo4Cz3E', 'fTXvdLjWgLw', 'Y3OFomGGO1A', 'MsFpMz5H3-M', 'V5GCCiQwQJQ', 'MdtR0hK5R0I', 'T6dyHb39XsU', 'laPRoJM1piA', 'HZnwic9-oTk', 'ZX1fD_rtOaY', 'vt3AW9stvpg', 'HFLsqG6Umn0', '9gRIO_P7utw', 'Yv-r79zWPPA', 'oVVkmPxGtz8', 'GQL-T7LR8YU', '31OeWxIAr5s', 'kMhEDvAyH8c', 'l9AKB-uT34w', 'RroXmbCfyGU', '4sQKOZrKOqI', '-nMdFYamG0Y', 'tJ_x7J7PV20', 'lsdSTFDOHKQ', 'XswPeqr3lyQ', 'oEqzpe45l4M', 'Fg3Ll7n-gbQ', 'xUPuR25faLw', 'T_eaN34_wjY', 'ThPQqEyllxg', '-mq1nyyBlz8', '40A0xGEPfcU', 'Ir_uqB2GBaU', 'h0k3V0G_Isc', 'Dcb6U7R8h9U', 'bHk20C33r_c', 'LGaD7BiMjkU', 'rIckrYV0I74', 'y77uXYXhr2o', '79agJoI8wEQ', 'QVN00spv1xs', 'sJgef0-4w_8']
 MUSIC_VIDEO_IDS = {"Adore You": "s1zBQ8uGs2k", "The Sun": "c_afT5Inopg", "Stained": "aY_ViF8pjWU"}
+
+# ---------------------------------------------------------------------------
+# Episodes found automatically by update_feeds.py (run daily by GitHub Actions).
+# They join the latest season; edit a season by hand here if a new one starts.
+import json as _json, os as _os
+_AUTO = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "auto_episodes.json")
+if _os.path.exists(_AUTO):
+    with open(_AUTO, encoding="utf-8") as _f:
+        _auto = _json.load(_f)
+    _report_season = max(s for s, _, _ in EPISODES)
+    _court_season = max(s for s, _, _ in COURT)
+    for _e in _auto.get("report", []):
+        if _e["id"] not in EPISODE_VIDEO_IDS:
+            EPISODES.append((_report_season, _e["date"], _e["title"]))
+            EPISODE_VIDEO_IDS.append(_e["id"])
+    for _e in _auto.get("court", []):
+        if _e["id"] not in COURT_VIDEO_IDS:
+            COURT.append((_court_season, _e["date"], _e["guest"]))
+            COURT_VIDEO_IDS.append(_e["id"])

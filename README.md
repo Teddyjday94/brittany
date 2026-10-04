@@ -35,6 +35,7 @@ The Watch the Nation cards, the "Tune in" Broski Report playlist, and the "Hold 
 | `poster.webp` | First Sip (Plate VIII) |
 | `test_site.py` | Automated checks for every feature (230 checks across desktop, phone, and reduced motion). Run `python3 test_site.py` after changes. Needs Playwright with Chromium. |
 | `contrast_audit.py` | Flags any text whose color contrast is below WCAG AA. Run `python3 contrast_audit.py`. |
+| `update_feeds.py` | Daily updater: finds new episodes on YouTube and saves them to `auto_episodes.json`. |
 | `data.py` | Every episode, guest, fact, video, and quiz question, with sources, plus the YouTube video IDs for every episode |
 | `build.py` | Regenerates all five HTML pages from `data.py` |
 | `art/` | Full-size art, the source files that draw it, and the design notes |
@@ -48,6 +49,16 @@ EMBED=1 python3 build.py
 ```
 
 `EMBED=1` turns on click-to-play videos. Leave it off to get plain link cards instead, which is the right choice for hosts that block embedded players. Don't hand-edit the HTML pages, because the next build overwrites them.
+
+## Automatic updates
+
+A GitHub Action (`.github/workflows/update.yml`) runs every day at 8:17 AM Central. It checks the Broski Report and Royal Court YouTube channels, adds any new episodes to `auto_episodes.json`, rebuilds the pages, and commits. Vercel then redeploys on its own.
+
+- New Report episodes need to run at least 20 minutes, so clips and Shorts are skipped.
+- New Royal Court episodes need a title like "Name Joins Brittany Broski's Royal Court". Other uploads are skipped.
+- New episodes join the latest season. If a new season starts, change the season number for those entries in `data.py`.
+- To update right away, open the repo's **Actions** tab, pick **Daily episode update**, and click **Run workflow**.
+- If YouTube changes its page layout, the run fails and GitHub emails you. The site keeps working; it just stops picking up new episodes until `update_feeds.py` is adjusted.
 
 ## Redraw the art
 
