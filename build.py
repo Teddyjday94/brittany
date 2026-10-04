@@ -3,7 +3,7 @@ import json, html, os, re
 from urllib.parse import quote_plus
 EMBED = os.environ.get("EMBED") == "1"  # 1 = click-to-play YouTube embeds (for a real host like Vercel)
 from collections import Counter
-from data import SOURCES, FACTS, EPISODES, COURT, QUIZ, tag_for
+from data import SOURCES, FACTS, EPISODES, COURT, QUIZ, tag_for, EPISODE_VIDEO_IDS, COURT_VIDEO_IDS, MUSIC_VIDEO_IDS, REPORT_PLAYLIST, COURT_PLAYLIST
 
 E = html.escape
 MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
@@ -87,12 +87,16 @@ def sec_head(h2, p, hid):
 
 
 MIC_SVG = '<svg class="pl-icon" viewBox="0 0 24 24" width="64" height="64" aria-hidden="true"><rect x="8" y="2" width="8" height="13" rx="4" fill="#FFC21A" stroke="#24082E" stroke-width="1.6"/><path d="M8.5 6.5h7M8.5 9.5h7" stroke="#24082E" stroke-width="1.2"/><path d="M5 11a7 7 0 0014 0M12 18v4M8 22h8" fill="none" stroke="#FFC21A" stroke-width="2.2" stroke-linecap="round"/></svg>'
+def watch_url(vid, list_id=None):
+    return f"https://www.youtube.com/watch?v={vid}" + (f"&list={list_id}" if list_id else "")
+
 def playlist_html(list_id, show, label, icon, variant):
     url = f"https://www.youtube.com/playlist?list={list_id}"
     if EMBED:
-        return (f'<div class="playlist"><button class="yt pl-yt pl-{variant}" type="button" data-list="{list_id}" aria-label="Play the {E(show)} playlist">'
+        return (f'<div class="playlist stage" data-list="{list_id}" data-variant="{variant}"><button class="yt pl-yt pl-{variant}" type="button" data-list="{list_id}" aria-label="Play the {E(show)} playlist">'
             f'{icon}<span class="play" aria-hidden="true"></span><span class="pl-label">{E(label)}</span></button>'
-            f'<p class="pl-note">Plays here through YouTube. Prefer the app? <a href="{url}" target="_blank" rel="noopener">Open the playlist on YouTube ↗</a></p></div>')
+            f'<p class="pl-now" hidden></p>'
+            f'<p class="pl-note">Plays here through YouTube. Pick any episode below to load it into this player. Prefer the app? <a href="{url}" target="_blank" rel="noopener">Open the playlist on YouTube ↗</a></p></div>')
     return (f'<a class="playlist pl-link" href="{url}" target="_blank" rel="noopener"><span class="yt pl-yt pl-{variant}" aria-hidden="true">'
         f'{icon}<span class="play"></span><span class="pl-label">{E(label)}</span></span>'
         f'<span class="pl-note">Opens the official {E(show)} playlist on YouTube ↗</span></a>')
@@ -126,7 +130,7 @@ def video_cards():
 
 
 # ---- Emergency broadcast TV (home hero): real episode titles as breaking news
-_tv_eps = [{"n":i,"d":fmt(d),"t":t,"s":s,"g":tag_for(t)} for i,(s,d,t) in enumerate(EPISODES,1)]
+_tv_eps = [{"n":i,"d":fmt(d),"t":t,"s":s,"g":tag_for(t),"v":EPISODE_VIDEO_IDS[i-1]} for i,(s,d,t) in enumerate(EPISODES,1)]
 _tv0 = _tv_eps[58]  # #059 Dragons are REAL
 TV_HTML = (
  '<div class="tv" aria-labelledby="tv-title">'
@@ -142,10 +146,10 @@ TV_HTML = (
  '<button class="btn small" id="tv-prev" type="button" aria-label="Previous channel" disabled>◀ Back</button>'
  '<button class="btn gold" id="tv-next" type="button">Change the channel</button>'
  '<button class="btn small teal" id="tv-scan" type="button" aria-pressed="false">Scan</button>'
- '<a class="btn small" id="tv-find" href="https://www.youtube.com/results?search_query=' + quote_plus("Broski Report " + _tv0["t"]) + '" target="_blank" rel="noopener">Find it ↗</a>'
+ '<a class="btn small" id="tv-find" href="' + watch_url(_tv0["v"]) + '" target="_blank" rel="noopener">Watch it ↗</a>'
  '<a class="btn small" id="tv-ep" href="report.html#ep-' + f"{_tv0['n']:03d}" + '">In the archive</a>'
  '</div>'
- '<small>Every headline is a real Broski Report episode title, 2023 to 2025. Click through all ' + str(len(_tv_eps)) + ' channels.</small>'
+ '<small>Every headline is a real Broski Report episode title, ' + EPISODES[0][1][:4] + ' to ' + EPISODES[-1][1][:4] + '. Click through all ' + str(len(_tv_eps)) + ' channels.</small>'
  '<script type="application/json" id="tv-data">' + json.dumps(_tv_eps) + '</script>'
  '</div>'
 )
@@ -161,7 +165,7 @@ home = f'''<section class="band b-violet hero" aria-labelledby="hero-title">
       <h1 id="hero-title"><span class="l1">Long live the</span><span class="l2">Supreme</span><span class="l3">Leader.</span></h1>
       <p class="lede">You found the fan-run news desk of <strong>Broski Nation</strong>. We cover Brittany Broski the comedian, the podcaster, the Royal Court monarch, the singer, and the woman behind the internet's most famous sip of kombucha. Brittany has nothing to do with this site, so blame the fans for everything here.</p>
       <div class="cta-row">
-        <a class="btn gold" href="report.html">Browse 116 episodes</a>
+        <a class="btn gold" href="report.html">Browse {len(EPISODES)} episodes</a>
         <a class="btn pink" href="lore.html#quiz">Take the citizenship exam</a>
       </div>
     </div>
@@ -193,7 +197,7 @@ home = f'''<section class="band b-violet hero" aria-labelledby="hero-title">
   <div class="wrap">
     {sec_head("Explore the Nation", "Four departments, one Supreme Leader. Pick a door.", "explore-title")}
     <div class="explore">
-      <a class="door" href="report.html"><span class="eyebrow">Broadcast archive</span><h3>The Broski Report</h3><p>Every episode title from 2023 through late 2025, searchable, plus the running bits.</p><span class="go">Enter ↗</span></a>
+      <a class="door" href="report.html"><span class="eyebrow">Broadcast archive</span><h3>The Broski Report</h3><p>All {len(EPISODES)} episodes from 2023 to {EPISODES[-1][1][:4]}, searchable and playable, plus the running bits.</p><span class="go">Enter ↗</span></a>
       <a class="door" href="court.html"><span class="eyebrow">The throne room</span><h3>Royal Court</h3><p>All {len(COURT)} guests, how a court works, and a coat of arms maker for you.</p><span class="go">Enter ↗</span></a>
       <a class="door" href="music.html"><span class="eyebrow">The music era</span><h3>Music</h3><p>The singles, the influences, and the musicians she has knighted.</p><span class="go">Enter ↗</span></a>
       <a class="door" href="lore.html"><span class="eyebrow">Classified</span><h3>Lore &amp; Facts</h3><p>{len(FACTS)} sourced facts, the full history, and the citizenship exam.</p><span class="go">Enter ↗</span></a>
@@ -313,7 +317,8 @@ chart_svg = f'<svg viewBox="0 0 {bw} {20+rowh*len(TAG_ORDER)}" role="img" aria-l
 ep_rows = "\n".join(
     f'      <article class="ep" id="ep-{i:03d}" data-n="{i}" data-s="{s}" data-g="{E(g)}" data-t="{E(t.lower())}"{" hidden" if i>24 else ""}>'
     f'<span class="no">#{i:03d}</span><time datetime="{d}">{fmt(d)}</time><h4>{E(t)}</h4><span class="tag" data-g="{E(g)}">{E(g)}</span>'
-    f'<a class="ep-go" href="https://www.youtube.com/results?search_query={quote_plus("Broski Report " + t)}" target="_blank" rel="noopener" aria-label="Find {E(t)} on YouTube">Find ↗</a></article>'
+    + (f'<button class="ep-go ep-play" type="button" data-vid="{EPISODE_VIDEO_IDS[i-1]}" aria-label="Play {E(t)} in the player">▶ Play</button></article>' if EMBED else
+       f'<a class="ep-go" href="{watch_url(EPISODE_VIDEO_IDS[i-1], REPORT_PLAYLIST)}" target="_blank" rel="noopener" aria-label="Watch {E(t)} on YouTube">Watch ↗</a></article>')
     for i,s,d,t,g in eps)
 
 season_chips = '<button class="chip" type="button" data-season="all" aria-pressed="true">All seasons</button>' + "".join(
@@ -338,11 +343,11 @@ lore_cards = "\n".join(f'      <article><h3>{E(a)}</h3><p>{E(b)}</p><small>{ep_l
 
 report = page_hero("b-pink", "Now broadcasting", "The Broski Report",
     "Brittany launched the Report in May 2023 and runs it like a satirical state broadcast. Each Tuesday the Supreme Leader reports on whatever she is obsessing over, learning about, or crying about, with props and a lot of green screen.",
-    [(str(len(EPISODES)),"episodes in our archive"),("3","seasons, 2023 to 2025"),("#4","Spotify US debut, May 2023"),("100","episodes by July 1, 2025")]) + f'''
+    [(str(len(EPISODES)),"episodes in our archive"),(str(len(seasons)),"seasons, 2023 to " + EPISODES[-1][1][:4]),("#4","Spotify US debut, May 2023"),("100","episodes by July 1, 2025")]) + f'''
 <section class="band b-tang" id="tune-in" aria-labelledby="tune-title">
   <div class="wrap">
     {sec_head("Tune in", "The official Broski Report playlist on YouTube, every news blast from the Supreme Leader in one queue.", "tune-title")}
-    {playlist_html("PLkkIoVxQEf_bKRa9MmHFKxVIFphuk2ET9", "Broski Report", "Play the Broski Report", MIC_SVG, "report")}
+    {playlist_html(REPORT_PLAYLIST, "Broski Report", "Play the Broski Report", MIC_SVG, "report")}
   </div>
 </section>
 
@@ -372,7 +377,7 @@ report = page_hero("b-pink", "Now broadcasting", "The Broski Report",
 
 <section class="band b-gold" id="archive" aria-labelledby="archive-title">
   <div class="wrap">
-    {sec_head("The Archive", "Every Report episode from the May 2023 premiere through November 2025. Search a title, filter by season or topic, or let fate pick.", "archive-title")}
+    {sec_head("The Archive", "Every Report episode from the May 2023 premiere to {fmt(EPISODES[-1][1])}. Search a title, filter by season or topic, then press play.", "archive-title")}
     <div class="tools">
       <label class="eyebrow" for="ep-search">Search episode titles</label>
       <input class="search" id="ep-search" type="search" placeholder="Try Hozier, dragons, or Irish" autocomplete="off">
@@ -401,11 +406,19 @@ page("report.html", "The Broski Report · Broski Bulletin", "report.html", repor
 
 # ---------------------------------------------------------------- COURT
 ARMS_DL = '<button class="btn gold" id="arms-dl" type="button">Download PNG</button>' if EMBED else ''
-PLAYLIST_HTML = playlist_html("PLihu86dj4FRMiSutkdLJJhqg7zSeTvo6U", "Royal Court", "Play the full court", '<span class="pl-icon pl-crown" aria-hidden="true">♛</span>', "court")
+PLAYLIST_HTML = playlist_html(COURT_PLAYLIST, "Royal Court", "Play the full court", '<span class="pl-icon pl-crown" aria-hidden="true">♛</span>', "court")
 cs = Counter(s for s,_,_ in COURT)
+def guest_html(i, s, d, n):
+    vid = COURT_VIDEO_IDS[i-1]
+    attrs = f'id="knight-{i:02d}" data-s="{s}" data-n="{E(n.lower())}"'
+    inner = f'<b>{E(n)}</b><span>No. {i:02d} · {fmt(d)}</span>'
+    if not vid:
+        return f'      <div class="guest gone" {attrs}>{inner}<em>No longer on YouTube</em></div>'
+    if EMBED:
+        return f'      <button class="guest" type="button" {attrs} data-vid="{vid}" data-title="Royal Court: {E(n)}">{inner}<em>▶ Play in the court</em></button>'
+    return f'      <a class="guest" {attrs} href="{watch_url(vid, COURT_PLAYLIST)}" target="_blank" rel="noopener">{inner}<em>Watch ↗</em></a>'
 guests = "\n".join(
-    f'      <a class="guest" id="knight-{i:02d}" href="https://www.youtube.com/results?search_query={quote_plus("Brittany Broski Royal Court " + n)}" target="_blank" rel="noopener" data-s="{s}" data-n="{E(n.lower())}"><b>{E(n)}</b><span>No. {i:02d} · {fmt(d)}</span><em>Watch ↗</em></a>'
-    for i,(s,d,n) in enumerate(COURT, 1))
+    guest_html(i, s, d, n) for i,(s,d,n) in enumerate(COURT, 1))
 court_chips = '<button class="chip" type="button" data-cs="all" aria-pressed="true">All seasons</button>' + "".join(
     f'<button class="chip" type="button" data-cs="{s}" aria-pressed="false">Season {s} · {cs[s]}</button>' for s in sorted(cs))
 
@@ -489,6 +502,14 @@ court = page_hero("b-court", "Hear ye, hear ye", "The Royal Court",
 '''
 page("court.html", "Royal Court · Broski Bulletin", "court.html", court, ["rcwiki","rctvdb","rs23","bustle","atlantic"])
 
+DISC_ART = {'Adore You': '<svg viewBox="0 0 200 120" aria-hidden="true"><rect width="200" height="120" fill="#5B1FE0"/><circle cx="60" cy="60" r="44" fill="#24082E"/><circle cx="60" cy="60" r="30" fill="none" stroke="#FF2E93" stroke-width="2"/><circle cx="60" cy="60" r="14" fill="#FFC21A"/><path d="M110 30 q20 30 0 60 M130 22 q28 38 0 76 M150 14 q36 46 0 92" stroke="#19D3C0" stroke-width="5" fill="none" stroke-linecap="round"/></svg>', 'The Sun': '<svg viewBox="0 0 200 120" aria-hidden="true"><rect width="200" height="120" fill="#FF2E93"/><circle cx="100" cy="68" r="34" fill="#FFC21A" stroke="#24082E" stroke-width="3"/><g stroke="#FFC21A" stroke-width="6" stroke-linecap="round"><path d="M100 14v14M100 108v8M48 68h-14M166 68h-14M62 30l9 9M138 30l-9 9M62 106l9-9M138 106l-9-9"/></g><circle cx="118" cy="58" r="24" fill="#FF2E93"/></svg>', 'Stained': '<svg viewBox="0 0 200 120" aria-hidden="true"><rect width="200" height="120" fill="#19D3C0"/><path d="M40 90 C60 30 90 100 110 50 S160 40 165 85 C150 105 70 110 40 90Z" fill="#24082E"/><circle cx="120" cy="70" r="11" fill="#FF2E93"/><circle cx="75" cy="78" r="6" fill="#FFC21A"/><circle cx="150" cy="30" r="5" fill="#5B1FE0"/></svg>'}
+def disc_media(name, svg):
+    vid = MUSIC_VIDEO_IDS[name]
+    if EMBED:
+        return (f'<button class="yt disc-yt" type="button" data-id="{vid}" aria-label="Play {E(name)}" '
+                f'style="background-image:url(https://i.ytimg.com/vi/{vid}/hqdefault.jpg)"><span class="play" aria-hidden="true"></span></button>')
+    return f'<a class="disc-link" href="{watch_url(vid)}" target="_blank" rel="noopener" aria-label="Watch {E(name)} on YouTube">{svg}<span class="disc-watch">Watch ↗</span></a>'
+
 # ---------------------------------------------------------------- MUSIC
 MUSO = ["Orville Peck","Charli XCX","Conan Gray","Maren Morris","Laufey","Trixie Mattel","Lewis Capaldi","Noah Cyrus","Marcus Mumford","Harry Styles","Sam Fender","Sombr"]
 lookup = {n:(i,d) for i,(s,d,n) in enumerate(COURT,1)}
@@ -501,18 +522,18 @@ music = page_hero("b-tang", "Now playing", "The Music Era",
     {sec_head("The singles", "From a proof-of-concept cover to two originals, in order.", "singles-title")}
     <div class="music">
       <article class="disc">
-        <svg viewBox="0 0 200 120" aria-hidden="true"><rect width="200" height="120" fill="#5B1FE0"/><circle cx="60" cy="60" r="44" fill="#24082E"/><circle cx="60" cy="60" r="30" fill="none" stroke="#FF2E93" stroke-width="2"/><circle cx="60" cy="60" r="14" fill="#FFC21A"/><path d="M110 30 q20 30 0 60 M130 22 q28 38 0 76 M150 14 q36 46 0 92" stroke="#19D3C0" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
-        <span class="meta">COVER · MAR 20, 2025</span><h3>Adore You</h3>
+        {disc_media("Adore You", DISC_ART["Adore You"])}
+                <span class="meta">COVER · MAR 20, 2025</span><h3>Adore You</h3>
         <p>Her first official release: a reimagined Harry Styles song from the fan who calls him her idol. She describes it as the proof of concept for everything after. It passed 3 million global streams within weeks.</p>
       </article>
       <article class="disc">
-        <svg viewBox="0 0 200 120" aria-hidden="true"><rect width="200" height="120" fill="#FF2E93"/><circle cx="100" cy="68" r="34" fill="#FFC21A" stroke="#24082E" stroke-width="3"/><g stroke="#FFC21A" stroke-width="6" stroke-linecap="round"><path d="M100 14v14M100 108v8M48 68h-14M166 68h-14M62 30l9 9M138 30l-9 9M62 106l9-9M138 106l-9-9"/></g><circle cx="118" cy="58" r="24" fill="#FF2E93"/></svg>
-        <span class="meta">DEBUT SINGLE · APR 4, 2025</span><h3>The Sun</h3>
+        {disc_media("The Sun", DISC_ART["The Sun"])}
+                <span class="meta">DEBUT SINGLE · APR 4, 2025</span><h3>The Sun</h3>
         <p>Produced and co-written with Luke Niccoli. A song about unrequited love, with bluegrass guitar and a big Texas-soul vocal. The Harvard Crimson gave it 4.5 stars.</p>
       </article>
       <article class="disc">
-        <svg viewBox="0 0 200 120" aria-hidden="true"><rect width="200" height="120" fill="#19D3C0"/><path d="M40 90 C60 30 90 100 110 50 S160 40 165 85 C150 105 70 110 40 90Z" fill="#24082E"/><circle cx="120" cy="70" r="11" fill="#FF2E93"/><circle cx="75" cy="78" r="6" fill="#FFC21A"/><circle cx="150" cy="30" r="5" fill="#5B1FE0"/></svg>
-        <span class="meta">SINGLE · 2025</span><h3>Stained</h3>
+        {disc_media("Stained", DISC_ART["Stained"])}
+                <span class="meta">SINGLE · MAY 29, 2025</span><h3>Stained</h3>
         <p>A dramatic, bluesy follow-up about being permanently marked by a relationship. Produced by Zhone and co-written with Zhone and Annika Bennett.</p>
       </article>
     </div>

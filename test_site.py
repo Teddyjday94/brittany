@@ -1,6 +1,7 @@
 """Functional tests for The Broski Bulletin. Run: python3 test_site.py  (needs Playwright + Chromium)."""
 import sys, os
 from playwright.sync_api import sync_playwright
+from data import EPISODES, COURT
 
 BASE = "file://" + os.path.dirname(os.path.abspath(__file__)) + "/"
 results = []
@@ -39,7 +40,7 @@ def run(width, reduced=False):
     p.click("#tv-next"); p.wait_for_timeout(2600)
     h1 = p.inner_text("#tv-headline")
     check(f"{tag} TV changes channel", h1 != h0 and len(h1) > 3, h1)
-    check(f"{tag} TV find link follows channel", "search_query" in p.get_attribute("#tv-find", "href"))
+    check(f"{tag} TV watch link follows channel", "watch?v=" in p.get_attribute("#tv-find", "href"))
     check(f"{tag} TV archive link follows channel", p.get_attribute("#tv-ep", "href").startswith("report.html#ep-"))
     p.click("#tv-prev"); p.wait_for_timeout(2600)
     check(f"{tag} TV back returns", p.inner_text("#tv-headline") == h0, p.inner_text("#tv-headline"))
@@ -62,7 +63,7 @@ def run(width, reduced=False):
     p = page("report.html")
     vis = lambda: p.evaluate("[...document.querySelectorAll('#archive-list .ep')].filter(r=>!r.hidden).length")
     check(f"{tag} archive shows 24 at rest", vis() == 24, vis())
-    p.click("#ep-more"); check(f"{tag} show all reveals 116", vis() == 116, vis())
+    p.click("#ep-more"); check(f"{tag} show all reveals every episode", vis() == len(EPISODES), vis())
     p.fill("#ep-search", "hozier"); p.wait_for_timeout(250)
     check(f"{tag} search finds Hozier episodes", vis() == 2, vis())
     p.fill("#ep-search", "zzzz"); p.wait_for_timeout(250)
@@ -73,13 +74,14 @@ def run(width, reduced=False):
     check(f"{tag} season + topic filter", 0 < n < 38, n)
     p.click('[data-season="all"]'); p.click('[data-tag="all"]')
     p.click("#ep-sort"); first = p.evaluate("[...document.querySelectorAll('#archive-list .ep')].find(r=>!r.hidden).id")
-    check(f"{tag} newest first sort", first == "ep-116", first)
+    check(f"{tag} newest first sort", first == f"ep-{len(EPISODES):03d}", first)
     p.click("#ep-sort")
     p.click("#ep-random"); p.wait_for_timeout(300)
     check(f"{tag} spin picks an episode", p.locator(".ep.picked").count() == 1)
     p.click('.lore a[href="#ep-059"]'); p.wait_for_timeout(700)
     check(f"{tag} running-bit link jumps to episode", p.evaluate("!document.getElementById('ep-059').hidden && document.getElementById('ep-059').classList.contains('picked')"))
-    check(f"{tag} episode find links", p.locator(".ep-go").count() == 116)
+    check(f"{tag} every episode has a watch link", p.locator(".ep-go").count() == len(EPISODES))
+    check(f"{tag} watch links are direct videos", p.evaluate("[...document.querySelectorAll('.ep-go')].every(a=>/watch\\?v=[\\w-]{11}/.test(a.href))"))
     check(f"{tag} report playlist present", p.locator("#tune-in .playlist").count() == 1)
     p.close()
     p = page("report.html#ep-100")
@@ -96,7 +98,7 @@ def run(width, reduced=False):
     p.fill("#g-search", ""); p.click('[data-cs="1"]'); check(f"{tag} knight season filter", g() == 7, g())
     p.click('[data-cs="all"]'); p.click("#g-random"); p.wait_for_timeout(300)
     check(f"{tag} summon a knight", p.locator(".guest.picked").count() == 1)
-    check(f"{tag} guests link to YouTube", p.evaluate("[...document.querySelectorAll('a.guest')].every(a=>a.href.includes('youtube.com'))"))
+    check(f"{tag} guests link to their videos", p.locator("a.guest").count() == len(COURT) - 1 and p.evaluate("[...document.querySelectorAll('a.guest')].every(a=>/watch\\?v=[\\w-]{11}/.test(a.href))"))
     check(f"{tag} playlist present", p.locator(".playlist").count() == 1)
     before = p.inner_html("#shield")
     p.click('.icon-btn[data-q="0"][data-icon="ghost"]'); p.click('.swatch[data-q="0"][data-color="#FF7A1A"]')

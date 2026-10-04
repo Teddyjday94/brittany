@@ -24,17 +24,18 @@ The Watch the Nation cards, the "Tune in" Broski Report playlist, and the "Hold 
 | File | What it is |
 |---|---|
 | `index.html` | Home: hero with the fizz animation, the Emergency Broadcast TV, video picks, daily fact, gallery, citizenship papers |
-| `report.html` | Broski Report archive (116 episodes), topic chart, running bits |
-| `court.html` | Royal Court format, all 83 guests, coat of arms maker |
-| `music.html` | Singles, influences, musicians at court |
+| `report.html` | Broski Report archive (136 episodes, each playable in the Tune in player), topic chart, running bits |
+| `court.html` | Royal Court format, all 83 guests (each playable in the Hold court player), coat of arms maker |
+| `music.html` | Singles with playable official videos, influences, musicians at court |
 | `lore.html` | 33 sourced facts, timeline, citizenship exam |
 | `styles.css` | Shared styles |
 | `app.js` | Shared behavior. Each feature runs only on pages that contain its markup. |
 | `motion.js` | Motion layer: scroll progress bar, reveals, parallax, fizz cursor, magnetic buttons, card tilt, sticky header, page wipes. Turns itself off for visitors with reduced motion; cursor effects run only with a mouse or trackpad. |
 | `seal.webp` | The Great Seal of Broski Nation (Plate IX) |
 | `poster.webp` | First Sip (Plate VIII) |
-| `test_site.py` | Automated checks for every feature (227 checks across desktop, phone, and reduced motion). Run `python3 test_site.py` after changes. Needs Playwright with Chromium. |
-| `data.py` | Every episode, guest, fact, video, and quiz question, with sources |
+| `test_site.py` | Automated checks for every feature (230 checks across desktop, phone, and reduced motion). Run `python3 test_site.py` after changes. Needs Playwright with Chromium. |
+| `contrast_audit.py` | Flags any text whose color contrast is below WCAG AA. Run `python3 contrast_audit.py`. |
+| `data.py` | Every episode, guest, fact, video, and quiz question, with sources, plus the YouTube video IDs for every episode |
 | `build.py` | Regenerates all five HTML pages from `data.py` |
 | `art/` | Full-size art, the source files that draw it, and the design notes |
 

@@ -64,6 +64,28 @@
     f.referrerPolicy='strict-origin-when-cross-origin';f.allowFullscreen=true;
     var w=document.createElement('div');w.className=b.className;w.appendChild(f);b.replaceWith(w);f.focus()})});
 
+  /* ---------- Play an episode inside a page's player (hosted build) ---------- */
+  function playInStage(stage,vid,title){
+    if(!stage)return;
+    if(localFile){window.open('https://www.youtube.com/watch?v='+vid+'&list='+stage.dataset.list,'_blank','noopener');return}
+    var f=document.createElement('iframe');
+    f.src='https://www.youtube-nocookie.com/embed/'+vid+'?list='+stage.dataset.list+'&autoplay=1&rel=0';
+    f.title=title||'YouTube video';
+    f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    f.referrerPolicy='strict-origin-when-cross-origin';f.allowFullscreen=true;
+    var w=document.createElement('div');w.className='yt pl-yt pl-'+(stage.dataset.variant||'');w.appendChild(f);
+    stage.replaceChild(w,stage.firstElementChild);
+    var now=stage.querySelector('.pl-now');if(now){now.textContent='Now playing: '+title;now.hidden=false}
+    stage.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'})}
+  var reportStage=document.querySelector('#tune-in .stage'),courtStage=document.querySelector('#watch-court .stage');
+  each('.ep-play',function(b){b.addEventListener('click',function(e){e.stopPropagation();var row=b.closest('.ep');
+    each('.ep.playing',function(r){r.classList.remove('playing')});row.classList.add('playing');
+    playInStage(reportStage,b.dataset.vid,row.querySelector('.no').textContent+' · '+row.querySelector('h4').textContent)})});
+  each('.ep',function(row){var b=row.querySelector('.ep-play');if(b)row.addEventListener('click',function(e){if(e.target.closest('a,button'))return;b.click()})});
+  each('button.guest[data-vid]',function(g){g.addEventListener('click',function(){
+    each('.guest.playing',function(x){x.classList.remove('playing')});g.classList.add('playing');
+    playInStage(courtStage,g.dataset.vid,g.dataset.title)})});
+
   /* ---------- Emergency broadcast TV ---------- */
   var tvEps=json('tv-data');
   if(tvEps && $('tv-next')){
@@ -71,7 +93,7 @@
     var refill=function(){order=shuffled(tvEps.map(function(_,i){return i}).filter(function(i){return i!==cur}))};
     var tvShow=function(i){var e=tvEps[i];cur=i;
       $('tv-ch').textContent='CH '+String(e.n).padStart(3,'0');$('tv-date').textContent=e.d;$('tv-tag').textContent='Season '+e.s+' · '+e.g;
-      $('tv-find').href=yt('Broski Report '+e.t);$('tv-ep').href='report.html#ep-'+String(e.n).padStart(3,'0');
+      $('tv-find').href='https://www.youtube.com/watch?v='+e.v;$('tv-ep').href='report.html#ep-'+String(e.n).padStart(3,'0');
       $('tv-prev').disabled=!hist.length;
       var h=$('tv-headline');clearInterval(typing);
       if(reduce){h.textContent=e.t;return}

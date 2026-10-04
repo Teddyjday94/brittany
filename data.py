@@ -99,15 +99,35 @@ EPISODES = [
  (3,"2025-09-09","I'm Obsessed with Female Madness"),(3,"2025-09-16","Coffee & Sun-Bleached Tonsils"),(3,"2025-09-23","Curing My Fears With the Internet"),
  (3,"2025-10-07","Farting on A Plane is FINE"),(3,"2025-10-14","I Reject Heaven and Hell, It's BORING"),(3,"2025-10-21","Ugly, Bald and Greasy"),
  (3,"2025-10-28","Uncle Fester (Halloween Special)"),(3,"2025-11-04","I'm Sorry Jacob Elordi"),
+ (4,"2025-11-11","DO NOT PULL ORACLE CARDS"),
+ (4,"2025-11-18","This Still Keeps Me Up At Night"),
+ (4,"2025-11-25","Thanksgiving But Everything Is Jello"),
+ (4,"2025-12-09","Tackled by Robert Downey Jr's Security"),
+ (4,"2025-12-16","A Very Chungus Christmas"),
+ (4,"2025-12-23","Broski Report Wrapped: 2025"),
+ (4,"2025-12-30","The Broski Nation 2026 Manifesto"),
+ (4,"2026-01-14","Addressing The Heated Rivalry Concerns"),
+ (4,"2026-01-20","Harry Styles & Franz Kafka"),
+ (4,"2026-01-27","Aesop's Fables & Big Fat Butts"),
+ (4,"2026-02-03","I WATCHED HEATED RIVALRY"),
+ (4,"2026-02-10","I'm Performing at the 2027 Superbowl"),
+ (4,"2026-02-17","Meet My Alter Ego"),
+ (4,"2026-02-24","Discovering the Origin of Swearing"),
+ (4,"2026-03-10","The Harry Styles of It All"),
+ (4,"2026-03-18","Official 2026 Oscars Experience Debrief"),
+ (4,"2026-03-31","Can Forgiveness Be Bought?"),
+ (4,"2026-04-07","Broski Nation Pawn Stars"),
+ (4,"2026-04-17","Why I'm Obsessed With The Macabre"),
+ (4,"2026-04-21","BIG SUMMER BLOWOUT"),
 ]
 
 TAG_RULES = [
- ("Nation lore", ["broski nation","broski empire","royal ballet","special ops","mind palace","brain store","school of fashion","wrapped","100th"]),
- ("Spooky", ["ghost","ouija","aliens","cryptid","dragon","halloween","fester","orlok","purgatory","heaven","santa","vampire","death","mortality","horror"]),
- ("History", ["wwii","victorian","roman","french revolution","chernobyl","churchill","michelangelo","orwell","hemingway","chaplin","sherlock","valentine","lord byron","bible","7 deadly","americentric","bourdain"]),
+ ("Nation lore", ["broski nation","broski empire","royal ballet","special ops","mind palace","brain store","school of fashion","wrapped","100th","manifesto","pawn stars","alter ego"]),
+ ("Spooky", ["ghost","ouija","aliens","cryptid","dragon","halloween","fester","orlok","purgatory","heaven","santa","vampire","death","mortality","horror","macabre","oracle"]),
+ ("History", ["wwii","victorian","roman","french revolution","chernobyl","churchill","michelangelo","orwell","hemingway","chaplin","sherlock","valentine","lord byron","bible","7 deadly","americentric","bourdain","kafka","aesop","origin of swearing"]),
  ("Music", ["hozier","beyoncé","cowboy carter","lana del rey","chappell","rosalía","greta van fleet","peso pluma"]),
  ("Crushes", ["pedro pascal","irish","elordi","chalamet","white boy","stanley tucci","enemies to lovers","harry styles","love island","fangirl","manic greek"]),
- ("Pop culture", ["shrek","bridgerton","fnaf","minions","jurassic","barbenheimer","mrbeast","bladerunner","superman","labubu","carrie bradshaw","shark tale","wallace","f1","tumblr","wattpad","tiktok","kai cenat","iron man","kelp"]),
+ ("Pop culture", ["shrek","bridgerton","fnaf","minions","jurassic","barbenheimer","mrbeast","bladerunner","superman","labubu","carrie bradshaw","shark tale","wallace","f1","tumblr","wattpad","tiktok","kai cenat","iron man","kelp","heated rivalry","chungus","oscars","superbowl","downey"]),
 ]
 
 def tag_for(title):
@@ -160,3 +180,13 @@ QUIZ = [
  ("What's her coffee order?", ["Black cold brew","Iced oat latte with hazelnut","Caramel macchiato","Matcha"], 1, "Grande iced oat milk latte, two pumps hazelnut."),
  ("Which milestone did the Report hit on July 1, 2025?", ["1 million downloads","Its 100th episode","A Webby win","A live tour"], 1, "Episode 100 got an Extravaganza special."),
 ]
+
+
+# YouTube video IDs, collected from the official playlists in October 2026.
+REPORT_PLAYLIST = "PLkkIoVxQEf_bKRa9MmHFKxVIFphuk2ET9"
+COURT_PLAYLIST = "PLihu86dj4FRMiSutkdLJJhqg7zSeTvo6U"
+# One ID per entry in EPISODES, same order.
+EPISODE_VIDEO_IDS = ['gBt-MQxXfBw', 'Yo-AjPkOeBQ', 'ZBaEzyXXRWI', '15QDvKTyUEU', 'ixTcuMJXuoc', '1ox7S1hbeok', 'bJrj0SUeDsg', 'W4kw-jAakoM', '-xeiYtwVH6I', 'nWl9C9Sr2ps', 's2h6_XTa6OE', '5sEoe-ajUJc', 'qZDok5oJFK0', 'MojOQFVF78c', 'jGQd7k_NrfM', 'ONXfMSqX-Lw', 'jY5Qr6_nJxA', '8O_YaYgfDk0', 'UiusO8_HdfE', '9VsIHk_MU-k', 'PPR8T9ck9tA', 'TgaVYi8Oadc', 'QXraXrC6vy8', 'tdKtRK2CSOw', 'oM193901ud4', 'AW8Si6shD3M', 'ek8WmQShSKQ', '_mEGPsTFXa8', 'vP-UBT_zEX8', 'oh2HDE22CRI', '7umLLmXf6tk', 'dQcbovGlN8g', 'dpRYJTUscA4', 'CEPvbGj8UQk', '0vl9EncUj1Y', 'E-ZwVtj7qEE', 'k72E2dmtwUI', '1WEeHcRPDXc', 'uzJBlUwN6A0', 'SgEDJoUqOJU', 'X4i7luDK1AY', 'ww4h7WvVlaE', 'iNOZvhdBIfY', 'XFq7CiM-27M', '2i3_aCZSLLA', 'hNjvv_f0Gdk', 'oi-YXBKEUAs', 'TAEmIJm8Kvo', 'T1uWQzRcVYU', 'OE4lBV0ZoII', 'gABYuWPjYFY', 'oKSxIRvOATg', 'BotNCm5VVNg', 'kao2likXTz8', 'EJeO4yhpblI', 'qxLA9-3y_Oo', 'RfUewrD5qiI', 'GnmAbMWtexo', '48LqY45ox64', 'wWBuRGq-3XA', 'mUJQpp1_3Ac', '5s674uj66iw', 'fcjDIdpR4XU', 'VuOrOLHGEVg', '7q5-cVt6w7o', '_CKkdGJL9Mw', 'kiQLupKE7is', 'VVqUe1Cxwc0', 'Ed0nYQ9bGbg', 'aJitslm1bf4', '6n0v_0Wb7NE', 'wFs4ZQcgmfU', 'fw5NYSsBKk8', 'DJps9GBNlHQ', '3VfjuhiUioY', '0hKabNUEpz0', '1d8ZaNMwu5s', 'dD4l4N90dnk', 'gvIXyp8XSDk', 'tf7448AxZs8', 'P7-b9uUYz0Q', 'qRdkvf3k4JA', 'BGRKfBeufXI', '_1ZFYCPN7UI', 'h6_kjzJhwPE', 'I2pVBg2ltcU', 'EembySRm6iM', 'OvBK7pDGncw', '6fnKMKclCuY', '1BdBhaH8os0', 'uGK9A6pyOkg', 'u_BWyRZKLoo', '92c52F9kwBw', 'a1SoH32cY2g', 'XpdU4W6irMk', '2qPStgv8t8o', 'mmN_eAgrH3I', 'q92rofuvyL8', 'IfzJFvTl25k', 'uJ1SYZrSGsk', '3uYu3m3anvA', 'MgV3jj53Vhw', 'jY_k_mJeEyI', 'hw-5DxNL42w', 'cw1cuhPnlII', 'kpaMbjnPJlQ', 'fp9bjT4iWI4', 'ur34PI9pblc', '2xUQ4y7Nodw', 'hkge-iMXxDE', 'q-y2EEzFGGQ', 'IiRofW0KAgg', 'aF6V2dlzfUE', 'Hb2iJnglTV8', 'RHY85YHTePA', 'SOMGm1rEIIQ', 'YqNpo_LCIpQ', 'IBDyG0e1Kzs', 'f1h8nDraqQ4', 'wSLgFXXoTyQ', 'zbXh_GpQOX4', 'yUZwqT60lZM', 'MUrl4NxNW-Y', 'jBYn2sV5bYk', 'eG54hN8JtqY', 'E8BiizI9cCs', '-FYbH4z36I4', 'yonPLO-jZ9g', 'yXYZlkwAQek', 'YSyQhLvn3jk', 'vHlrK3dGFVk', '6d7nip_50ns', 'WVSaJcves3k', '-0gFZBfx4e0', 'jgit1VD1qOQ', 'Gd-x408mHLw']
+# One ID per entry in COURT, same order. None = episode no longer on YouTube.
+COURT_VIDEO_IDS = ['fV70vvbaktk', 's-8rWY9KZNY', None, 'adirfoaPacc', 'oF1NpILWGhg', '0dn3V-PjU5I', 'HYHS8vIPZgQ', '-iks8pJUv7E', 'digzsDLaNOI', 'FLEoDN6V2lo', 'x6bXsiDtYsY', '4u4KzBas7ZE', 'EG4ba0Igsf8', 'AVlTqJifTgk', 'PHTHdVK3JXM', '9cHHK_ypNZw', 'DfNcgzfg80s', 'cZEvDNVQgx0', 'rtM6IstvooA', 'oa-iLXCTwtQ', 'YT8e1mCeVMw', 'DQCvuD04zIQ', '0R6yqx0B-6E', '98WbNzYhYnU', 'EOOKRYXw5ks', 'o1txVUDzhD0', '6tNWYBV4xoM', 'ZeoNuYuSGVY', 'CaMN7lbHevs', '2E7WGltkY3o', '4_oLkEiO7ks', '9RvqhC-mcOw', 'HSkxQslmZ8Q', 'CzJh-35rS60', 'cTwMxhx8jP0', 'xcJBPqEaLYc', 'ypTsVPomfOc', 'nbY4zdliKuA', 'HVyvXZMtGis', 'gWUYhW1h7uU', 'sH0AILbpY0Y', 'RiplOo4Cz3E', 'fTXvdLjWgLw', 'Y3OFomGGO1A', 'MsFpMz5H3-M', 'V5GCCiQwQJQ', 'MdtR0hK5R0I', 'T6dyHb39XsU', 'laPRoJM1piA', 'HZnwic9-oTk', 'ZX1fD_rtOaY', 'vt3AW9stvpg', 'HFLsqG6Umn0', '9gRIO_P7utw', 'Yv-r79zWPPA', 'oVVkmPxGtz8', 'GQL-T7LR8YU', '31OeWxIAr5s', 'kMhEDvAyH8c', 'l9AKB-uT34w', 'RroXmbCfyGU', '4sQKOZrKOqI', '-nMdFYamG0Y', 'tJ_x7J7PV20', 'lsdSTFDOHKQ', 'XswPeqr3lyQ', 'oEqzpe45l4M', 'Fg3Ll7n-gbQ', 'xUPuR25faLw', 'T_eaN34_wjY', 'ThPQqEyllxg', '-mq1nyyBlz8', '40A0xGEPfcU', 'Ir_uqB2GBaU', 'h0k3V0G_Isc', 'Dcb6U7R8h9U', 'bHk20C33r_c', 'LGaD7BiMjkU', 'rIckrYV0I74', 'y77uXYXhr2o', '79agJoI8wEQ', 'QVN00spv1xs', 'sJgef0-4w_8']
+MUSIC_VIDEO_IDS = {"Adore You": "s1zBQ8uGs2k", "The Sun": "c_afT5Inopg", "Stained": "aY_ViF8pjWU"}
