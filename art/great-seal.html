@@ -1,0 +1,164 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:BS;src:url(file:///root/.claude/skills/synced/f92399da-8174-40a2-a9d7-c58560b9068e_d2b7f5bd-daf3-4f6c-b34c-4915dbfa094f/canvas-design/canvas-fonts/BigShoulders-Bold.ttf)}
+@font-face{font-family:DMM;src:url(file:///root/.claude/skills/synced/f92399da-8174-40a2-a9d7-c58560b9068e_d2b7f5bd-daf3-4f6c-b34c-4915dbfa094f/canvas-design/canvas-fonts/DMMono-Regular.ttf)}
+@font-face{font-family:GL;src:url(file:///root/.claude/skills/synced/f92399da-8174-40a2-a9d7-c58560b9068e_d2b7f5bd-daf3-4f6c-b34c-4915dbfa094f/canvas-design/canvas-fonts/Gloock-Regular.ttf)}
+html,body{margin:0;background:#5B1FE0}
+svg{display:block}
+</style></head><body>
+<svg id="p" width="1200" height="1600" viewBox="0 0 1200 1600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="topArc" d="M 600 640 m -381 0 a 381 381 0 1 1 762 0"/>
+    <path id="botArc" d="M 600 640 m -405 0 a 405 405 0 0 0 810 0"/>
+    <clipPath id="disk"><circle cx="600" cy="640" r="330"/></clipPath>
+    <clipPath id="shieldClip"><path id="shieldPath" d="M450 525 H750 V700 C750 800 690 850 600 885 C510 850 450 800 450 700 Z"/></clipPath>
+  </defs>
+  <rect width="1200" height="1600" fill="#5B1FE0"/>
+  <g id="rulers"></g>
+
+  <!-- header labels -->
+  <text x="84" y="98" font-family="DMM" font-size="15" fill="#FFF4E2" letter-spacing="1.2">MINISTRY OF EFFERVESCENCE</text>
+  <text x="84" y="122" font-family="DMM" font-size="13" fill="#CDBEFA" letter-spacing="1.2">PLATE IX  ·  THE GREAT SEAL</text>
+  <text x="1116" y="98" font-family="DMM" font-size="15" fill="#FFC21A" text-anchor="end" letter-spacing="1.2">No. 0510</text>
+
+  <!-- seal: shadow, ring band -->
+  <circle cx="612" cy="652" r="440" fill="#FF2E93"/>
+  <circle cx="600" cy="640" r="440" fill="#24082E"/>
+  <circle cx="600" cy="640" r="430" fill="#FFC21A"/>
+  <circle cx="600" cy="640" r="424" fill="none" stroke="#24082E" stroke-width="2"/>
+  <circle cx="600" cy="640" r="352" fill="none" stroke="#24082E" stroke-width="2"/>
+  <text font-family="BS" font-size="43" fill="#24082E" letter-spacing="5" text-anchor="middle"><textPath href="#topArc" startOffset="50%">THE GREAT SEAL OF BROSKI NATION</textPath></text>
+  <text font-family="BS" font-size="34" fill="#24082E" letter-spacing="6" text-anchor="middle"><textPath href="#botArc" startOffset="50%">EST.  AUGUST  VI  ·  MMXIX</textPath></text>
+  <g id="sideStars"></g>
+  <!-- bead ring: 83 beads, one per Royal Court knight -->
+  <circle cx="600" cy="640" r="346" fill="#24082E"/>
+  <g id="beads"></g>
+
+  <!-- inner field -->
+  <circle cx="600" cy="640" r="332" fill="#33105F"/>
+  <g clip-path="url(#disk)">
+    <g id="rays"></g>
+    <g id="fizz"></g>
+  </g>
+
+  <!-- crest: the kombucha bottle on a small crown wreath -->
+  <g id="crest" transform="translate(600 448)">
+    <g id="crestBubbles"></g>
+    <rect x="-13" y="-82" width="26" height="16" rx="3" fill="#FF2E93" stroke="#24082E" stroke-width="4"/>
+    <path d="M-11 -66 H11 V-50 C11 -42 28 -36 28 -18 V38 C28 46 22 50 16 50 H-16 C-22 50 -28 46 -28 38 V-18 C-28 -36 -11 -42 -11 -50 Z" fill="#FFF4E2" stroke="#24082E" stroke-width="5"/>
+    <clipPath id="bottleIn"><path d="M-11 -66 H11 V-50 C11 -42 28 -36 28 -18 V38 C28 46 22 50 16 50 H-16 C-22 50 -28 46 -28 38 V-18 C-28 -36 -11 -42 -11 -50 Z"/></clipPath>
+    <g clip-path="url(#bottleIn)"><rect x="-40" y="-8" width="80" height="70" fill="#FF7A1A"/>
+      <circle cx="-10" cy="20" r="4" fill="#FFF4E2"/><circle cx="8" cy="8" r="3" fill="#FFF4E2"/><circle cx="2" cy="32" r="3.5" fill="#FFF4E2"/></g>
+    <rect x="-20" y="-6" width="40" height="22" rx="3" fill="#5B1FE0" stroke="#24082E" stroke-width="3"/>
+    <path d="M-28 62 H28 L32 52 L18 58 L10 46 L0 56 L-10 46 L-18 58 L-32 52 Z" fill="#FFC21A" stroke="#24082E" stroke-width="3.5" stroke-linejoin="round"/>
+  </g>
+
+  <!-- shield, quartered -->
+  <g clip-path="url(#shieldClip)">
+    <rect x="450" y="525" width="150" height="180" fill="#FF2E93"/>
+    <rect x="600" y="525" width="150" height="180" fill="#19D3C0"/>
+    <rect x="450" y="705" width="150" height="190" fill="#FFC21A"/>
+    <rect x="600" y="705" width="150" height="190" fill="#FF7A1A"/>
+  </g>
+  <!-- B microphone (upper left) -->
+  <g transform="translate(525 612)" fill="none" stroke="#24082E" stroke-linecap="round">
+    <rect x="-17" y="-52" width="34" height="58" rx="17" fill="#FFF4E2" stroke-width="5"/>
+    <path d="M-17 -30 H17 M-17 -18 H17 M-6 -50 V4 M6 -50 V4" stroke-width="2.5"/>
+    <path d="M-30 -14 C-30 22 30 22 30 -14" stroke-width="5"/>
+    <path d="M0 14 V40 M-18 42 H18" stroke-width="6"/>
+  </g>
+  <!-- C crown (upper right) -->
+  <g transform="translate(675 618)" stroke="#24082E" stroke-width="4.5" stroke-linejoin="round">
+    <path d="M-50 22 L-56 -30 L-28 -4 L0 -46 L28 -4 L56 -30 L50 22 Z" fill="#FFC21A"/>
+    <rect x="-52" y="22" width="104" height="18" rx="4" fill="#FFC21A"/>
+    <circle cx="-56" cy="-34" r="7" fill="#FF2E93"/><circle cx="0" cy="-51" r="8" fill="#FF2E93"/><circle cx="56" cy="-34" r="7" fill="#FF2E93"/>
+    <circle cx="-26" cy="31" r="4.5" fill="#5B1FE0" stroke-width="2.5"/><circle cx="0" cy="31" r="4.5" fill="#FF2E93" stroke-width="2.5"/><circle cx="26" cy="31" r="4.5" fill="#5B1FE0" stroke-width="2.5"/>
+  </g>
+  <!-- D sun (lower left) -->
+  <g transform="translate(528 784)" stroke="#24082E" stroke-width="4" stroke-linejoin="round">
+    <g id="sunRays"></g>
+    <circle r="27" fill="#FF2E93"/>
+    <circle cx="-8" cy="-6" r="7" fill="#FFF4E2" stroke="none"/>
+  </g>
+  <!-- E dragon (lower right) -->
+  <g transform="translate(660 786) scale(.8)" stroke="#24082E" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M-30 6 L-50 -50 L-30 -34 L-26 -58 L-12 -30 Z" fill="#5B1FE0"/>
+    <path d="M-44 52 C-44 18 -26 -10 0 -18 L6 -44 L16 -18 L40 -12 L60 -6 L56 4 L32 6 L54 16 L48 24 L22 22 C10 30 2 40 -2 56 Z" fill="#33105F"/>
+    <path d="M-40 30 L-50 26 L-42 18 M-34 10 L-44 4 L-34 -2" fill="#33105F"/>
+    <circle cx="20" cy="-6" r="4" fill="#FFC21A" stroke-width="2"/>
+    <path d="M56 10 C66 6 70 14 78 10 C72 18 66 18 60 18" fill="#FF2E93" stroke-width="3"/>
+  </g>
+  <!-- shield outline and dividers -->
+  <path d="M600 525 V885 M450 705 H750" stroke="#24082E" stroke-width="5"/>
+  <use href="#shieldPath" fill="none" stroke="#24082E" stroke-width="9"/>
+
+  <!-- F motto ribbon -->
+  <g id="ribbon">
+    <path d="M318 918 L370 918 L360 940 L370 962 L318 962 L332 940 Z" fill="#FF7A1A" stroke="#24082E" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M882 918 L830 918 L840 940 L830 962 L882 962 L868 940 Z" fill="#FF7A1A" stroke="#24082E" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M360 904 Q600 884 840 904 L840 952 Q600 932 360 952 Z" fill="#FFF4E2" stroke="#24082E" stroke-width="5" stroke-linejoin="round"/>
+    <path id="mottoPath" d="M380 936 Q600 914 820 936" fill="none"/>
+    <text font-family="GL" font-size="34" fill="#24082E" letter-spacing="3" text-anchor="middle"><textPath href="#mottoPath" startOffset="50%">NUNC EST BIBENDUM</textPath></text>
+  </g>
+
+  <!-- callouts -->
+  <g id="callouts" font-family="DMM" font-size="15" fill="#FFF4E2"></g>
+
+  <!-- title -->
+  <text x="84" y="1384" font-family="BS" font-size="150" fill="#FFF4E2">THE GREAT</text>
+  <text x="84" y="1516" font-family="BS" font-size="150" fill="#FFC21A">SEAL.</text>
+
+  <!-- legend -->
+  <g id="legend" font-family="DMM"></g>
+</svg>
+<script>
+const NS='http://www.w3.org/2000/svg', cx=600, cy=640;
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);(parent||document.getElementById('p')).appendChild(e);return e}
+// seeded random
+let seed=510;function rnd(){seed=(seed*16807)%2147483647;return(seed-1)/2147483646}
+// rulers
+const R=document.getElementById('rulers');
+for(let y=84;y<=1516;y+=16){const L=(y-84)%160===0;el('line',{x1:40,y1:y,x2:L?58:48,y2:y,stroke:L?'#FFF4E2':'#CDBEFA','stroke-width':L?1.2:.8},R)}
+for(let x=84;x<=1116;x+=16){const L=(x-84)%160===0;el('line',{x1:x,y1:1560,x2:x,y2:L?1542:1552,stroke:L?'#FFF4E2':'#CDBEFA','stroke-width':L?1.2:.8},R)}
+// 76 beads
+const B=document.getElementById('beads');
+for(let i=0;i<83;i++){const a=i/83*Math.PI*2-Math.PI/2;el('circle',{cx:cx+341*Math.cos(a),cy:cy+341*Math.sin(a),r:i===0?4.6:3.2,fill:i===0?'#FF2E93':'#FFF4E2'},B)}
+// side stars on the band at 9 and 3 o'clock
+const S=document.getElementById('sideStars');
+function star(x,y,r,fill,par){let d='';for(let i=0;i<10;i++){const a=i*Math.PI/5-Math.PI/2,rr=i%2?r*.42:r;d+=(i?'L':'M')+(x+rr*Math.cos(a)).toFixed(2)+' '+(y+rr*Math.sin(a)).toFixed(2)}el('path',{d:d+'Z',fill,stroke:'#24082E','stroke-width':2.5,'stroke-linejoin':'round'},par)}
+star(cx-391,cy,17,'#FF2E93',S);star(cx+391,cy,17,'#FF2E93',S);
+// sunburst rays in the field
+const Ry=document.getElementById('rays');
+for(let i=0;i<48;i++){const a0=i/48*Math.PI*2,a1=(i+.5)/48*Math.PI*2;
+  el('path',{d:`M${cx} ${cy} L${cx+360*Math.cos(a0)} ${cy+360*Math.sin(a0)} L${cx+360*Math.cos(a1)} ${cy+360*Math.sin(a1)} Z`,fill:'#3E1673'},Ry)}
+// fizz: tiny bubbles rising in the field, denser at the bottom
+const F=document.getElementById('fizz');const pts=[];
+for(let t=0;t<9000&&pts.length<230;t++){const a=rnd()*Math.PI*2,rr=322*Math.sqrt(rnd());const x=cx+rr*Math.cos(a),y=cy+rr*Math.sin(a);
+  const f=(y-(cy-322))/644;const r=2+f*f*6*(.6+.4*rnd());
+  // keep clear of shield, crest and ribbon
+  if(x>430&&x<770&&y>350&&y<905)continue; if(y>880)continue;
+  if(pts.some(p=>(p[0]-x)**2+(p[1]-y)**2<(p[2]+r+3)**2))continue;
+  pts.push([x,y,r]);const c=['#FFC21A','#FFC21A','#FF2E93','#19D3C0','#FFF4E2'][Math.floor(rnd()*5)];el('circle',{cx:x,cy:y,r,fill:c},F)}
+// bubbles rising from the bottle neck
+const CB=document.getElementById('crestBubbles');
+[[0,-98,6],[-9,-116,5],[7,-132,4.4],[-4,-148,3.6],[6,-162,3],[-2,-174,2.4]].forEach(b=>el('circle',{cx:b[0],cy:b[1],r:b[2],fill:'#FFF4E2',stroke:'#24082E','stroke-width':2},CB));
+// sun rays
+const SR=document.getElementById('sunRays');
+for(let i=0;i<12;i++){const a=i/12*Math.PI*2,a0=a-.16,a1=a+.16;el('path',{d:`M${33*Math.cos(a0)} ${33*Math.sin(a0)} L${50*Math.cos(a)} ${50*Math.sin(a)} L${33*Math.cos(a1)} ${33*Math.sin(a1)} Z`,fill:'#FFF4E2'},SR)}
+// callouts: [letter, element x,y, label x,y]
+const C=document.getElementById('callouts');
+const calls=[['A',572,410,120,330],['B',492,612,120,560],['D',488,784,120,800],['C',716,612,1080,560],['E',648,808,1080,800],['F',840,928,1080,1010]];
+calls.forEach(([L,ex,ey,lx,ly])=>{
+  const left=lx<cx;el('circle',{cx:ex,cy:ey,r:4,fill:'#FFF4E2',stroke:'#24082E','stroke-width':2},C);
+  el('path',{d:`M${ex} ${ey} L${left?lx+22:lx-22} ${ly}`,stroke:'#FFF4E2','stroke-width':1.3,fill:'none'},C);
+  el('circle',{cx:lx,cy:ly,r:18,fill:'#5B1FE0',stroke:'#FFF4E2','stroke-width':1.5},C);
+  const t=el('text',{x:lx,y:ly+5,'text-anchor':'middle','font-size':15,fill:'#FFF4E2'},C);t.textContent=L});
+// legend
+const G=document.getElementById('legend');
+const items=[['A','THE CREST','Cream soda kombucha. First sip, Aug 6, 2019.'],['B','THE MICROPHONE','The Broski Report, on air since May 2023.'],['C','THE CROWN','Royal Court. One bead on the ring per knight.'],['D','THE SUN','Her debut single, out April 4, 2025.'],['E','THE DRAGON','On the record, July 2024: dragons are real.'],['F','THE MOTTO','Nunc est bibendum. Now, we drink.']];
+items.forEach(([L,h,d],i)=>{const y=1212+i*52;
+  const a=el('text',{x:700,y,'font-size':14,fill:'#FFC21A','letter-spacing':1.5},G);a.textContent=L+'   '+h;
+  const b=el('text',{x:700,y:y+21,'font-size':13,fill:'#FFF4E2'},G);b.textContent=d});
+</script>
+</body></html>
