@@ -19,8 +19,9 @@ CHANNELS = {
 }
 MIN_REPORT_SECONDS = 20 * 60          # skip clips and compilations shorter than a full episode
 COURT_TITLE = re.compile(r"^(?P<guest>.+?)\s+Joins?\s+Brittany(?:\s+Broski)?['’]s\s+Royal Court", re.I)
-HEADERS = {"User-Agent": "Mozilla/5.0 (BroskiBulletin updater; +https://broski-bulletin.vercel.app)",
-           "Accept-Language": "en-US,en;q=0.9"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36",
+           "Accept-Language": "en-US,en;q=0.9",
+           "Cookie": "CONSENT=YES+cb; SOCS=CAI"}   # skip YouTube's cookie-consent interstitial
 
 
 def get(url):
@@ -32,7 +33,9 @@ def get(url):
 def initial_data(html):
     m = re.search(r"var ytInitialData = (\{.*?\});</script>", html, re.S)
     if not m:
-        raise RuntimeError("ytInitialData not found; YouTube's page format may have changed")
+        title = re.search(r"<title>(.*?)</title>", html, re.S)
+        raise RuntimeError("ytInitialData not found; page title was "
+                           + repr(title.group(1)[:80] if title else html[:120]))
     return json.loads(m.group(1))
 
 
@@ -111,4 +114,6 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         print(f"Update failed: {e}", file=sys.stderr)
+        if os.environ.get("GITHUB_ACTIONS"):
+            print(f"::error title=Episode update failed::{e}")
         sys.exit(1)
