@@ -23,7 +23,7 @@ The Watch the Nation cards, the "Tune in" Broski Report playlist, and the "Hold 
 
 | File | What it is |
 |---|---|
-| `index.html` | Home: hero with the fizz animation, the Emergency Broadcast TV, video picks, daily fact, gallery, citizenship papers |
+| `index.html` | Home: hero with the portrait and fizz animation, the Emergency Broadcast TV, video picks, daily fact, gallery, citizenship papers |
 | `report.html` | Broski Report archive (136 episodes, each playable in the Tune in player), topic chart, running bits |
 | `court.html` | Royal Court format, all 83 guests (each playable in the Hold court player), coat of arms maker |
 | `music.html` | Singles with playable official videos, influences, musicians at court |
@@ -31,6 +31,7 @@ The Watch the Nation cards, the "Tune in" Broski Report playlist, and the "Hold 
 | `styles.css` | Shared styles |
 | `app.js` | Shared behavior. Each feature runs only on pages that contain its markup. |
 | `motion.js` | Motion layer: scroll progress bar, reveals, parallax, fizz cursor, magnetic buttons, card tilt, sticky header, page wipes. Turns itself off for visitors with reduced motion; cursor effects run only with a mouse or trackpad. |
+| `portrait.webp` | Hero portrait: a cutout of a still from Sarah Baska's 2021 YouTube video, licensed CC BY 3.0 on [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Brittany_Broski_cow_video_2021_05.png). The credit under the photo is required by the license, so keep it. `art/photo/make_portrait.py` rebuilds it. |
 | `seal.webp` | The Great Seal of Broski Nation (Plate IX) |
 | `poster.webp` | First Sip (Plate VIII) |
 | `test_site.py` | Automated checks for every feature (230 checks across desktop, phone, and reduced motion). Run `python3 test_site.py` after changes. Needs Playwright with Chromium. |

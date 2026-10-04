@@ -169,15 +169,32 @@ home = f'''<section class="band b-violet hero" aria-labelledby="hero-title">
         <a class="btn pink" href="lore.html#quiz">Take the citizenship exam</a>
       </div>
     </div>
-    <div>
+    <div class="hero-art">
+      <figure class="portrait">
+        <div class="portrait-stage">
+          <div class="portrait-frame" aria-hidden="true"></div>
+          <img src="portrait.webp" width="767" height="920" alt="Brittany Broski peering over a pair of black cat-eye sunglasses">
+          <span class="portrait-tag">Her Royal Highness</span>
+        </div>
+        <figcaption>Photo: Sarah Baska, <a href="https://commons.wikimedia.org/wiki/File:Brittany_Broski_cow_video_2021_05.png" target="_blank" rel="noopener">CC BY 3.0</a>. Cropped and cut out.</figcaption>
+      </figure>
       <div class="burst" aria-hidden="true">
         <svg viewBox="0 0 200 200"><defs><path id="circ" d="M100,100 m-62,0 a62,62 0 1,1 124,0 a62,62 0 1,1 -124,0"/></defs>
           <polygon fill="#19D3C0" stroke="#24082E" stroke-width="4" points="100,4 117,38 151,20 148,58 188,62 162,92 192,118 152,128 164,166 126,156 112,194 92,160 60,186 56,146 16,150 38,116 6,90 44,76 30,38 68,46 82,10"/>
           <text font-family="DM Mono, monospace" font-size="15" font-weight="500" fill="#24082E" letter-spacing="2"><textPath href="#circ">100% UNOFFICIAL ✦ 100% DEVOTED ✦</textPath></text>
           <text x="100" y="112" text-anchor="middle" font-family="Shrikhand, Georgia, serif" font-size="30" fill="#FF2E93" stroke="#24082E" stroke-width="1.2">FAN</text></svg>
       </div>
-{TV_HTML}
     </div>
+  </div>
+</section>
+
+<section class="band b-ink tv-band" aria-labelledby="tv-title">
+  <div class="wrap">
+    <div class="tv-intro">
+      <span class="stamp">This just in</span>
+      <p>Breaking news from the Report archive, one channel per episode. Leave it on Scan and let the Nation's finest headlines roll.</p>
+    </div>
+{TV_HTML}
   </div>
 </section>
 
