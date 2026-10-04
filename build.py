@@ -377,7 +377,7 @@ report = page_hero("b-pink", "Now broadcasting", "The Broski Report",
 
 <section class="band b-gold" id="archive" aria-labelledby="archive-title">
   <div class="wrap">
-    {sec_head("The Archive", "Every Report episode from the May 2023 premiere to {fmt(EPISODES[-1][1])}. Search a title, filter by season or topic, then press play.", "archive-title")}
+    {sec_head("The Archive", f"Every Report episode from the May 2023 premiere to {fmt(EPISODES[-1][1])}. Search a title, filter by season or topic, then press play.", "archive-title")}
     <div class="tools">
       <label class="eyebrow" for="ep-search">Search episode titles</label>
       <input class="search" id="ep-search" type="search" placeholder="Try Hozier, dragons, or Irish" autocomplete="off">
