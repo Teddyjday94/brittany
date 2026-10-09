@@ -11,6 +11,12 @@
    "title": "Buzz Lightyear is an American Hero"
   }
  ],
- "court": [],
+ "court": [
+  {
+   "id": "dBirsdorumg",
+   "date": "2026-10-09",
+   "guest": "Drew Barrymore"
+  }
+ ],
  "skipped": []
 }
